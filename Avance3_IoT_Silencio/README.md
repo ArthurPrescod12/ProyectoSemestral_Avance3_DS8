@@ -29,7 +29,18 @@ $prefijo = "utp/ds8/g01/monitoreo-incendios-a3"
 
 Cuando empiecen a llegar mensajes, verás líneas `[RX]`. Con `alarma=True` la estación está en `PELIGRO`. Si además aparece `buzzer_silenciado=True`, el sonido está en pausa.
 
-Las lecturas quedan en `registros/historial_lecturas.csv` y los cambios de comunicación en `registros/eventos_comunicacion.csv`. Si ya existe un historial con el formato anterior, el receptor escribe las nuevas lecturas en `registros/historial_lecturas_con_silencio.csv`. [Pasos para abrir el dashboard](../README.md#abrir-el-dashboard)
+Las lecturas quedan en `registros/historial_lecturas.csv` y los cambios de comunicación en `registros/eventos_comunicacion.csv`. Si ya existe un historial con el formato anterior, el receptor escribe las nuevas lecturas en `registros/historial_lecturas_con_silencio.csv`.
+
+## Abrir el dashboard
+
+Después de preparar el entorno de Python, abre otra terminal de PowerShell en la carpeta principal del repositorio y ejecuta lo siguiente.
+
+```powershell
+Set-Location .\Avance3_IoT_Silencio
+.\.venv\Scripts\python.exe -m http.server 8000 --bind 127.0.0.1 --directory ..\dist
+```
+
+En **Cambiar fuente → MQTT en vivo**, escribe el mismo prefijo que usaste en Wokwi y en el receptor. También puedes importar los CSV o abrir las lecturas de la prueba incluida. [Abrir el dashboard local](http://127.0.0.1:8000/)
 
 ## Probar una orden
 
@@ -61,4 +72,4 @@ Para contar los 15 segundos usamos `ticks_add` y `ticks_diff`. Revisamos el tiem
 
 ## Pruebas del avance
 
-Probamos la lectura normal, una orden válida y una inválida, el rechazo de datos incorrectos y la recuperación después de un corte de Wi-Fi. También comprobamos qué pasa al reiniciar, al dejar de publicar con la estación conectada y al detener la simulación. La tabla con los resultados y las capturas está en el informe. [Informe del Avance 3](../dist/evidencia/informe.pdf)
+Probamos la lectura normal, una orden válida y una inválida, el rechazo de datos incorrectos y la recuperación después de un corte de Wi-Fi. También comprobamos qué pasa al reiniciar, al dejar de publicar con la estación conectada y al detener la simulación.
