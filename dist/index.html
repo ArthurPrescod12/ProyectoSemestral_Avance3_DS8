@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Telemetría MQTT, alarmas y resultados de las pruebas del avance 3 del proyecto IoT.">
+  <meta name="description" content="Telemetría MQTT, alarmas y registros del avance 3 del proyecto IoT.">
   <meta name="theme-color" content="#101a21">
   <title>Estación IoT · Avance 3</title>
   <link rel="stylesheet" href="styles.css">
@@ -22,7 +22,6 @@
       <nav aria-label="Secciones del panel">
         <a href="#resumen" data-page="resumen" aria-current="page"><span aria-hidden="true">◫</span> Resumen</a>
         <a href="#registros" data-page="registros"><span aria-hidden="true">≡</span> Registros</a>
-        <a href="#guia" data-page="guia"><span aria-hidden="true">✓</span> Guía y pruebas</a>
       </nav>
       <div class="sidebar-footer"><span class="dot"></span> ESP32 · Wokwi <small>Herramientas de Programación Aplicada IV</small></div>
     </aside>
@@ -72,7 +71,6 @@
           <div><strong id="total-lecturas">0</strong><span>Lecturas válidas</span></div>
           <div><strong id="total-descartes">0</strong><span>Mensajes descartados</span></div>
           <div><strong id="total-eventos">0</strong><span>Cambios de comunicación</span></div>
-          <div class="summary-link"><a href="#guia">8 escenarios de la guía →</a></div>
         </div>
       </section>
       <section id="registros" class="page" aria-labelledby="registros-title" hidden>
@@ -93,30 +91,6 @@
           <div class="card-top"><div><h2>Órdenes y validación</h2><p id="actividad-fuente">Resultados observados en las pruebas.</p></div></div>
           <div class="table-scroll"><table><thead><tr><th>Registro</th><th>Contenido</th><th>Resultado</th></tr></thead><tbody id="tabla-actividad"></tbody></table></div>
         </article>
-      </section>
-      <section id="guia" class="page" aria-labelledby="guia-title" hidden>
-        <div class="intro"><div><p class="eyebrow">GUÍA DEL PROFESOR · AVANCE 3</p><h1 id="guia-title">Guía y pruebas</h1><p>Requisitos funcionales y evidencia de la ejecución del 10 de noviembre de 2026.</p></div><a class="button primary" href="evidencia/informe.pdf" target="_blank" rel="noopener">Abrir informe ↗</a></div>
-        <article class="card table-card">
-          <div class="card-top"><div><h2>Escenarios obligatorios</h2><p>8 de 8 verificados con la versión del botón.</p></div><span class="pill online">VERIFICADO</span></div>
-          <div class="table-scroll"><table><thead><tr><th>Escenario</th><th>Cómo se probó</th><th>Esperado</th><th>Observado</th></tr></thead><tbody id="tabla-pruebas"></tbody></table></div>
-        </article>
-        <div class="guide-grid">
-          <article class="card guide-card"><h2>Botón de silencio</h2><p>Durante PELIGRO, una pulsación apaga el buzzer por 15 s y deja el LED rojo fijo. La telemetría sigue llegando. Si el peligro persiste, el sonido regresa.</p><ul><li>Peligro persistente: reactivación comprobada.</li><li>Alerta pasajera: retorno a NORMAL comprobado.</li><li>Corte de Wi-Fi: el botón respondió localmente.</li></ul></article>
-          <article class="card guide-card"><h2>Flujo del sistema</h2><div class="flow" aria-label="Flujo de datos"><span>ESP32</span><b>→</b><span>HiveMQ</span><b>→</b><span>Python</span><b>→</b><span>CSV</span></div><p>Python valida los mensajes con Paho MQTT 2.1.0 y registra cada lectura válida. El monitor escribe un evento al cambiar de estado. Los mensajes salen cada 5 s y el silencio de datos se detecta a los 15 s.</p></article>
-        </div>
-        <article class="card table-card">
-          <div class="card-top"><div><h2>Temas y mensajes MQTT</h2><p>Prefijo de ejemplo <code>utp/ds8/GRUPO/monitoreo-incendios-a3</code></p></div></div>
-          <div class="table-scroll"><table><thead><tr><th>Sufijo</th><th>Dirección</th><th>Contenido</th><th>Retenido</th></tr></thead><tbody>
-            <tr><td><code>/telemetria</code></td><td>ESP32 → broker → Python</td><td>Lecturas, riesgo, umbral y estado del buzzer</td><td>No</td></tr>
-            <tr><td><code>/estado</code></td><td>ESP32 o broker → Python</td><td><code>online</code> y testamento <code>offline</code></td><td>Sí</td></tr>
-            <tr><td><code>/orden</code></td><td>Emisor → broker → ESP32</td><td>Acción y valor</td><td>No</td></tr>
-          </tbody></table></div>
-          <details class="json"><summary>Ver ejemplo JSON de la prueba</summary><pre id="ejemplo-json"></pre></details>
-        </article>
-        <div class="guide-grid">
-          <article class="card guide-card"><h2>Capturas de la ejecución</h2><p>Registro visual de la estación, el receptor y el monitor.</p><div class="evidence-links"><a href="evidencia/wokwi.jpg" target="_blank" rel="noopener">Wokwi ↗</a><a href="evidencia/receptor.jpg" target="_blank" rel="noopener">Receptor ↗</a><a href="evidencia/monitor.jpg" target="_blank" rel="noopener">Monitor ↗</a></div></article>
-          <article class="card guide-card"><h2>Entrega y defensa</h2><p>El equipo debe completar la portada, compartir su Wokwi actualizado y dar acceso al profesor al repositorio con los aportes de los integrantes.</p><p>Demostración de 5 a 8 minutos, con participación y una modificación en vivo por integrante.</p></article>
-        </div>
       </section>
       <footer class="foot">Estación IoT · Universidad Tecnológica de Panamá <span>ESP32 · MQTT · Python</span></footer>
     </main>

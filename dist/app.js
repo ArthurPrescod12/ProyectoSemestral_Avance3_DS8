@@ -15,16 +15,6 @@ const SENSORES = {
   temperatura_c: { nombre: "Temperatura", unidad: "°C", min: 20, max: 45, umbral: () => 40 },
   humedad_pct: { nombre: "Humedad", unidad: "%", min: 0, max: 100 }
 };
-const PRUEBAS = [
-  ["1. Funcionamiento normal", "Arrancar con potenciómetro en 200.", "Publicar lecturas y registrar ONLINE.", "801 ADC, 27 °C y 42.5 %. Estado NORMAL y filas en CSV."],
-  ["2. Orden válida", "Potenciómetro en 600 y enviar umbral 2200.", "Cambiar el umbral y activar la alarma.", "Con 2402 ADC pasó de ADVERTENCIA a PELIGRO."],
-  ["3. Orden inválida", "Enviar umbral 9999.", "Rechazar y conservar la configuración.", "Wokwi mostró ORDEN RECHAZADA. El umbral se mantuvo en 2200."],
-  ["4. Caída y recuperación", "Cortar Wi-Fi durante 25 s.", "Mantener el control local y reanudar los envíos.", "El botón respondió durante el corte. Python volvió a recibir lecturas. En la prueba local se observaron reintentos de 2, 4 y 8 s."],
-  ["5. Datos inválidos", "Enviar cinco mensajes con errores de sintaxis, campos, rango, tipo o coherencia.", "Descartar, avisar y continuar.", "Cinco avisos, cero filas inválidas y nuevas lecturas válidas."],
-  ["6. Reinicio", "Pulsar Restart en Wokwi.", "Recuperar la conexión y el umbral inicial.", "Volvió ONLINE y el umbral pasó de 2200 a 2800."],
-  ["7. Silencio de datos", "Enviar publicar=false y luego publicar=true.", "Detectar SIN_DATOS y regresar a ONLINE.", "SIN_DATOS a los 15 s. HiveMQ entregó online retenido durante la pausa."],
-  ["8. Detener simulación", "Pulsar Stop en Wokwi.", "Recibir el testamento y registrar OFFLINE.", "Se registró OFFLINE y otro suscriptor confirmó que quedó retenido."]
-];
 const ACTIVIDAD = [
   ["Orden válida", "umbral_gas = 2200", "Aplicada por el ESP32. La lectura de 2402 ADC pasó a PELIGRO."],
   ["Orden inválida", "umbral_gas = 9999", "Rechazada en Wokwi. El umbral siguió en 2200."],
@@ -439,7 +429,7 @@ function exportar(nombre, campos, filas) {
 
 function navegar() {
   const solicitada = location.hash.slice(1);
-  panel.pagina = ["resumen","registros","guia"].includes(solicitada) ? solicitada : "resumen";
+  panel.pagina = solicitada === "registros" ? "registros" : "resumen";
   document.querySelectorAll(".page").forEach(s => s.hidden = s.id !== panel.pagina);
   document.querySelectorAll("[data-page]").forEach(a => {
     if (a.dataset.page === panel.pagina) a.setAttribute("aria-current","page");
@@ -457,14 +447,6 @@ function cancelarEspera() {
 }
 
 function iniciar() {
-  llenar("tabla-pruebas", PRUEBAS, "", 4);
-  texto("ejemplo-json", JSON.stringify({
-    telemetria: { dispositivo_id: ESTACION, gas_adc:2402, temperatura_c:27,
-      humedad_pct:42.5, clasificacion:"PELIGRO", alarma_activa:true,
-      buzzer_silenciado:true, umbral_gas:2200 },
-    estado: { dispositivo_id: ESTACION, estado:"online" },
-    orden: { accion:"umbral_gas", valor:2200 }
-  }, null, 2));
   cargarPrueba();
   navegar();
   window.addEventListener("hashchange", navegar);
