@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Telemetría MQTT, alarmas y resultados de las pruebas del avance 3 del proyecto IoT.">
+  <meta name="theme-color" content="#101a21">
+  <title>Estación IoT · Avance 3</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="vendor/paho-mqtt-min.js"></script>
+  <script defer src="datos.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="#resumen">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11"/><path d="M8 22h7l3-8 4 13 3-5h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Estación IoT<small>PROYECTO SEMESTRAL</small></span>
+      </a>
+      <div class="nav-label">MONITOREO</div>
+      <nav aria-label="Secciones del panel">
+        <a href="#resumen" data-page="resumen" aria-current="page"><span aria-hidden="true">◫</span> Resumen</a>
+        <a href="#registros" data-page="registros"><span aria-hidden="true">≡</span> Registros</a>
+        <a href="#guia" data-page="guia"><span aria-hidden="true">✓</span> Guía y pruebas</a>
+      </nav>
+      <div class="sidebar-footer"><span class="dot"></span> ESP32 · Wokwi <small>Herramientas de Programación Aplicada IV</small></div>
+    </aside>
+    <main id="contenido">
+      <header class="topbar">
+        <span>UTP / Proyecto semestral / <strong>Avance 3</strong></span>
+        <a class="button small" href="evidencia/informe.pdf" target="_blank" rel="noopener">Ver informe ↗</a>
+      </header>
+      <section id="resumen" class="page" aria-labelledby="titulo">
+        <div class="intro">
+          <div>
+            <p class="eyebrow">MONITOREO AMBIENTAL E INCENDIOS</p>
+            <h1 id="titulo">Estación IoT</h1>
+            <p id="subtitulo">Lecturas, alarmas y comunicación del ESP32.</p>
+          </div>
+          <button type="button" class="button primary" id="abrir-fuente">Cambiar fuente <span aria-hidden="true">⌁</span></button>
+        </div>
+        <div class="source-strip">
+          <div><span class="tag" id="fuente">PRUEBA REGISTRADA</span><span id="fuente-detalle">10 nov 2026 · Panamá</span></div>
+          <span id="actualizacion" aria-live="polite"></span>
+        </div>
+        <div class="metrics" aria-label="Últimas lecturas">
+          <article class="card metric"><div class="metric-label"><span class="icon gas" aria-hidden="true">∿</span> Gas simulado</div><div class="metric-value"><span id="gas">—</span> <small>ADC</small></div><div class="metric-note" id="umbral">Umbral crítico —</div></article>
+          <article class="card metric"><div class="metric-label"><span class="icon temp" aria-hidden="true">◉</span> Temperatura</div><div class="metric-value"><span id="temperatura">—</span> <small>°C</small></div><div class="metric-note">DHT22 · umbral crítico 40 °C</div></article>
+          <article class="card metric"><div class="metric-label"><span class="icon hum" aria-hidden="true">♒</span> Humedad</div><div class="metric-value"><span id="humedad">—</span> <small>%</small></div><div class="metric-note">Humedad relativa · DHT22</div></article>
+          <article class="card metric"><div class="metric-label"><span class="icon alarm" aria-hidden="true">!</span> Alarma ambiental</div><div id="alarma" class="metric-value state-value">—</div><div class="metric-note" id="buzzer">Buzzer —</div></article>
+        </div>
+        <div class="overview">
+          <article class="card chart-card">
+            <div class="card-top"><div><h2>Telemetría</h2><p id="chart-sub">Lecturas registradas en el tiempo</p></div>
+              <div class="segment" aria-label="Variable del gráfico"><button type="button" data-sensor="gas_adc" aria-pressed="true">Gas</button><button type="button" data-sensor="temperatura_c" aria-pressed="false">Temp.</button><button type="button" data-sensor="humedad_pct" aria-pressed="false">Humedad</button></div>
+            </div>
+            <div class="chart-wrap" id="chart"></div>
+            <div class="chart-foot"><span class="legend"><i></i> <span id="chart-legend">Lectura ADC</span></span><span class="legend threshold" id="leyenda-umbral"><i></i> Umbral crítico</span><label>Mostrar <select id="rango"><option value="0">Todas</option><option value="20">Últimas 20</option><option value="10">Últimas 10</option></select></label></div>
+          </article>
+          <article class="card comm">
+            <div class="card-top"><div><h2>Comunicación MQTT</h2><p id="comunicacion-caption">Último estado registrado</p></div></div>
+            <div class="comm-current"><span class="pill" id="estado">—</span><span id="estado-hora"></span></div>
+            <div class="comm-note" id="estado-nota"></div>
+            <div class="section-line"></div>
+            <h3>Transiciones recientes</h3>
+            <ol class="timeline" id="timeline"></ol>
+            <a class="text-link" href="#registros">Abrir registros →</a>
+          </article>
+        </div>
+        <div class="summary-bar" aria-label="Conteo de registros">
+          <div><strong id="total-lecturas">0</strong><span>Lecturas válidas</span></div>
+          <div><strong id="total-descartes">0</strong><span>Mensajes descartados</span></div>
+          <div><strong id="total-eventos">0</strong><span>Cambios de comunicación</span></div>
+          <div class="summary-link"><a href="#guia">8 escenarios de la guía →</a></div>
+        </div>
+      </section>
+      <section id="registros" class="page" aria-labelledby="registros-title" hidden>
+        <div class="intro"><div><p class="eyebrow">HISTORIAL</p><h1 id="registros-title">Registros</h1><p id="registros-fuente"></p></div><a href="#resumen" class="button">Volver al resumen</a></div>
+        <article class="card table-card">
+          <div class="card-top"><div><h2>Lecturas recibidas</h2><p id="lecturas-count" aria-live="polite"></p></div>
+            <div class="table-tools"><label for="filtro-lecturas">Riesgo</label><select id="filtro-lecturas"><option value="">Todos</option><option>NORMAL</option><option>ADVERTENCIA</option><option>PELIGRO</option></select><button class="button small" id="descargar-lecturas" type="button">Descargar CSV</button></div>
+          </div>
+          <div class="table-scroll"><table><thead><tr><th>Hora</th><th>Gas ADC</th><th>Temperatura</th><th>Humedad</th><th>Riesgo</th><th>Umbral</th><th>Buzzer</th></tr></thead><tbody id="tabla-lecturas"></tbody></table></div>
+        </article>
+        <article class="card table-card">
+          <div class="card-top"><div><h2>Eventos de comunicación</h2><p id="eventos-count" aria-live="polite"></p></div>
+            <div class="table-tools"><label for="filtro-eventos">Estado</label><select id="filtro-eventos"><option value="">Todos</option><option>ONLINE</option><option>SIN_DATOS</option><option>OFFLINE</option></select><button class="button small" id="descargar-eventos" type="button">Descargar CSV</button></div>
+          </div>
+          <div class="table-scroll"><table><thead><tr><th>Hora</th><th>Estado</th><th>Gravedad</th><th>Detalle</th></tr></thead><tbody id="tabla-eventos"></tbody></table></div>
+        </article>
+        <article class="card table-card">
+          <div class="card-top"><div><h2>Órdenes y validación</h2><p id="actividad-fuente">Resultados observados en las pruebas.</p></div></div>
+          <div class="table-scroll"><table><thead><tr><th>Registro</th><th>Contenido</th><th>Resultado</th></tr></thead><tbody id="tabla-actividad"></tbody></table></div>
+        </article>
+      </section>
+      <section id="guia" class="page" aria-labelledby="guia-title" hidden>
+        <div class="intro"><div><p class="eyebrow">GUÍA DEL PROFESOR · AVANCE 3</p><h1 id="guia-title">Guía y pruebas</h1><p>Requisitos funcionales y evidencia de la ejecución del 10 de noviembre de 2026.</p></div><a class="button primary" href="evidencia/informe.pdf" target="_blank" rel="noopener">Abrir informe ↗</a></div>
+        <article class="card table-card">
+          <div class="card-top"><div><h2>Escenarios obligatorios</h2><p>8 de 8 verificados con la versión del botón.</p></div><span class="pill online">VERIFICADO</span></div>
+          <div class="table-scroll"><table><thead><tr><th>Escenario</th><th>Cómo se probó</th><th>Esperado</th><th>Observado</th></tr></thead><tbody id="tabla-pruebas"></tbody></table></div>
+        </article>
+        <div class="guide-grid">
+          <article class="card guide-card"><h2>Botón de silencio</h2><p>Durante PELIGRO, una pulsación apaga el buzzer por 15 s y deja el LED rojo fijo. La telemetría sigue llegando. Si el peligro persiste, el sonido regresa.</p><ul><li>Peligro persistente: reactivación comprobada.</li><li>Alerta pasajera: retorno a NORMAL comprobado.</li><li>Corte de Wi-Fi: el botón respondió localmente.</li></ul></article>
+          <article class="card guide-card"><h2>Flujo del sistema</h2><div class="flow" aria-label="Flujo de datos"><span>ESP32</span><b>→</b><span>HiveMQ</span><b>→</b><span>Python</span><b>→</b><span>CSV</span></div><p>Python valida los mensajes con Paho MQTT 2.1.0 y registra cada lectura válida. El monitor escribe un evento al cambiar de estado. Los mensajes salen cada 5 s y el silencio de datos se detecta a los 15 s.</p></article>
+        </div>
+        <article class="card table-card">
+          <div class="card-top"><div><h2>Temas y mensajes MQTT</h2><p>Prefijo de ejemplo <code>utp/ds8/GRUPO/monitoreo-incendios-a3</code></p></div></div>
+          <div class="table-scroll"><table><thead><tr><th>Sufijo</th><th>Dirección</th><th>Contenido</th><th>Retenido</th></tr></thead><tbody>
+            <tr><td><code>/telemetria</code></td><td>ESP32 → broker → Python</td><td>Lecturas, riesgo, umbral y estado del buzzer</td><td>No</td></tr>
+            <tr><td><code>/estado</code></td><td>ESP32 o broker → Python</td><td><code>online</code> y testamento <code>offline</code></td><td>Sí</td></tr>
+            <tr><td><code>/orden</code></td><td>Emisor → broker → ESP32</td><td>Acción y valor</td><td>No</td></tr>
+          </tbody></table></div>
+          <details class="json"><summary>Ver ejemplo JSON de la prueba</summary><pre id="ejemplo-json"></pre></details>
+        </article>
+        <div class="guide-grid">
+          <article class="card guide-card"><h2>Capturas de la ejecución</h2><p>Registro visual de la estación, el receptor y el monitor.</p><div class="evidence-links"><a href="evidencia/wokwi.jpg" target="_blank" rel="noopener">Wokwi ↗</a><a href="evidencia/receptor.jpg" target="_blank" rel="noopener">Receptor ↗</a><a href="evidencia/monitor.jpg" target="_blank" rel="noopener">Monitor ↗</a></div></article>
+          <article class="card guide-card"><h2>Entrega y defensa</h2><p>El equipo debe completar la portada, compartir su Wokwi actualizado y dar acceso al profesor al repositorio con los aportes de los integrantes.</p><p>Demostración de 5 a 8 minutos, con participación y una modificación en vivo por integrante.</p></article>
+        </div>
+      </section>
+      <footer class="foot">Estación IoT · Universidad Tecnológica de Panamá <span>ESP32 · MQTT · Python</span></footer>
+    </main>
+  </div>
+  <dialog id="modal-fuente" aria-labelledby="modal-titulo">
+    <div class="dialog-head"><div><p class="eyebrow">DATOS DEL PANEL</p><h2 id="modal-titulo">Fuente de datos</h2></div><button class="button small" id="cerrar-fuente" type="button" aria-label="Cerrar">×</button></div>
+    <div class="source-choice"><h3>Prueba registrada</h3><p>Usa las 63 lecturas y 18 eventos de la validación del avance 3.</p><button class="button" id="usar-prueba" type="button">Cargar evidencia</button></div>
+    <form class="source-choice" id="form-csv">
+      <h3>Archivos de Python</h3><p>Importa los CSV del receptor para consultar una ejecución propia.</p>
+      <label>Historial de lecturas <input type="file" id="archivo-lecturas" accept=".csv,text/csv" required></label>
+      <label>Eventos de comunicación <input type="file" id="archivo-eventos" accept=".csv,text/csv"></label>
+      <button class="button" type="submit">Importar CSV</button>
+    </form>
+    <form class="source-choice" id="form-mqtt">
+      <h3>MQTT en vivo</h3><p>Suscripción de solo lectura a HiveMQ. Usa el prefijo exacto de tu simulación en Wokwi.</p>
+      <label>Prefijo MQTT <input id="prefijo" required placeholder="utp/ds8/g01/monitoreo-incendios-a3" maxlength="120" autocomplete="off" spellcheck="false"></label>
+      <button class="button primary" id="conectar" type="submit">Conectar a HiveMQ</button>
+      <button class="button" id="desconectar" type="button" hidden>Desconectar</button>
+    </form>
+    <p class="feedback" id="feedback" role="status"></p>
+  </dialog>
+</body>
+</html>

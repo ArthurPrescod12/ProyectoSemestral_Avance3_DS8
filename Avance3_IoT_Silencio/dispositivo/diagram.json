@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "author": "Proyecto IoT Monitoreo",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {
+        "env": "micropython-20260406-v1.28.0"
+      }
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht",
+      "top": -153.3,
+      "left": 100.2,
+      "attrs": {
+        "humidity": "42.5",
+        "temperature": "27"
+      }
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot_mq2",
+      "top": -120,
+      "left": -120,
+      "attrs": {
+        "label": "Simulador Gas MQ-2",
+        "value": "200"
+      }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz",
+      "top": 69.6,
+      "left": 213,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-rgb-led",
+      "id": "rgb",
+      "top": 176.8,
+      "left": -133.3,
+      "attrs": {
+        "common": "cathode"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "silencio",
+      "top": -42,
+      "left": 215,
+      "attrs": {
+        "color": "blue",
+        "label": "Silenciar alarma",
+        "key": "S"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:3V3",
+      "dht:VCC",
+      "red",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "esp:GND.1",
+      "dht:GND",
+      "black",
+      [
+        "v-172.8",
+        "h139.39"
+      ]
+    ],
+    [
+      "esp:15",
+      "dht:SDA",
+      "green",
+      [
+        "v-144",
+        "h73.74"
+      ]
+    ],
+    [
+      "esp:3V3",
+      "pot_mq2:VCC",
+      "red",
+      [
+        "h-71.81",
+        "v-80.3"
+      ]
+    ],
+    [
+      "esp:GND.1",
+      "pot_mq2:GND",
+      "black",
+      [
+        "h-100.61",
+        "v-205.1"
+      ]
+    ],
+    [
+      "esp:34",
+      "pot_mq2:SIG",
+      "orange",
+      [
+        "h-91.01",
+        "v-118.7"
+      ]
+    ],
+    [
+      "esp:18",
+      "bz:1",
+      "purple",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "esp:GND.2",
+      "bz:2",
+      "black",
+      [
+        "v144",
+        "h149.24"
+      ]
+    ],
+    [
+      "esp:4",
+      "rgb:R",
+      "red",
+      [
+        "h14.44",
+        "v76.8"
+      ]
+    ],
+    [
+      "esp:2",
+      "rgb:G",
+      "green",
+      [
+        "h24.04",
+        "v67.2",
+        "h-231.7"
+      ]
+    ],
+    [
+      "esp:GND.2",
+      "rgb:COM",
+      "black",
+      [
+        "h33.64",
+        "v220.8",
+        "h-249.7"
+      ]
+    ],
+    [
+      "esp:23",
+      "silencio:1.l",
+      "blue",
+      []
+    ],
+    [
+      "esp:GND.3",
+      "silencio:2.l",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

@@ -1,0 +1,19 @@
+fecha,tipo,gravedad,detalle
+2026-11-10T16:43:23-05:00,ONLINE,INFO,INICIO -> ONLINE. Se recibió telemetría válida.
+2026-11-10T16:46:44-05:00,SIN_DATOS,ADVERTENCIA,ONLINE -> SIN_DATOS. Pasaron 15 s sin telemetría válida.
+2026-11-10T16:46:54-05:00,ONLINE,INFO,SIN_DATOS -> ONLINE. Se recibió telemetría válida.
+2026-11-10T16:47:16-05:00,OFFLINE,CRITICA,ONLINE -> OFFLINE. El broker informó offline en el tema de estado.
+2026-11-10T16:47:17-05:00,ONLINE,INFO,OFFLINE -> ONLINE. Se recibió telemetría válida.
+2026-11-10T16:47:48-05:00,SIN_DATOS,ADVERTENCIA,ONLINE -> SIN_DATOS. Pasaron 15 s sin telemetría válida.
+2026-11-10T16:47:49-05:00,OFFLINE,CRITICA,SIN_DATOS -> OFFLINE. El broker informó offline en el tema de estado.
+2026-11-10T16:48:20-05:00,ONLINE,INFO,OFFLINE -> ONLINE. Se recibió telemetría válida.
+2026-11-10T16:48:40-05:00,SIN_DATOS,ADVERTENCIA,ONLINE -> SIN_DATOS. Pasaron 15 s sin telemetría válida.
+2026-11-10T16:48:43-05:00,OFFLINE,CRITICA,SIN_DATOS -> OFFLINE. El broker informó offline en el tema de estado.
+2026-11-10T16:49:19-05:00,ONLINE,INFO,OFFLINE -> ONLINE. Se recibió telemetría válida.
+2026-11-10T16:50:20-05:00,OFFLINE,CRITICA,ONLINE -> OFFLINE. El broker informó offline en el tema de estado.
+2026-11-10T16:50:23-05:00,ONLINE,INFO,OFFLINE -> ONLINE. Se recibió telemetría válida.
+2026-11-10T16:50:43-05:00,SIN_DATOS,ADVERTENCIA,ONLINE -> SIN_DATOS. Pasaron 15 s sin telemetría válida.
+2026-11-10T16:50:46-05:00,OFFLINE,CRITICA,SIN_DATOS -> OFFLINE. El broker informó offline en el tema de estado.
+2026-11-10T16:51:03-05:00,ONLINE,INFO,OFFLINE -> ONLINE. Se recibió telemetría válida.
+2026-11-10T16:51:38-05:00,SIN_DATOS,ADVERTENCIA,ONLINE -> SIN_DATOS. Pasaron 15 s sin telemetría válida.
+2026-11-10T16:51:42-05:00,OFFLINE,CRITICA,SIN_DATOS -> OFFLINE. El broker informó offline en el tema de estado.
